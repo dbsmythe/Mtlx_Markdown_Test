@@ -11,7 +11,7 @@ Jonathan Stone - Lucasfilm Advanced Development Group
 March 26, 2023
 
 
-## Introduction {#introduction}
+## Introduction
 
 Computer graphics production studios commonly use workflows involving multiple software tools for different parts of the production pipeline.  There is also a significant amount of sharing and outsourcing of work across facilities, requiring companies to hand off fully look-developed models to other divisions or studios which may use different software packages and rendering systems.  In addition, studio rendering pipelines that previously used monolithic shaders built by expert programmers or technical directors with fixed, predetermined texture-to-shader connections and hard-coded texture color-correction options are now using more flexible node-based shader networks built up by connecting images and procedurals to shader inputs through a graph of image processing and blending operators.
 
@@ -84,7 +84,7 @@ This document describes the core MaterialX specification.  Companion documents *
 **[References](#references)**
 
 
-## MaterialX Overview {#materialx-overview}
+## MaterialX Overview
 
 The diagram below gives a high-level overview of a typical MaterialX look definition.  A directed acyclic graph of pattern generation and processing nodes is connected to inputs of a surface Shader which defines a layered BSDF response.  One or more shaders can be connected to form a Material, which is ultimately associated with specific scene geometry via a MaterialAssign, a number of which comprise a Look.  The assignments of Materials to geometries can be defined within a MaterialX document in applications supporting MaterialX Geometry Extensions, or using an alternative mechanism such as USD[^1] or a native application's toolset.  Each of the pattern nodes and even the Shaders may in turn be implemented using a graph of nodes: these NodeGraphs are given a parameter interface using NodeDefs, and these implementations may be reused with different input values just like any other Standard node defined by MaterialX.
 
@@ -94,7 +94,7 @@ MaterialX also allows the specification of additional information not shown in t
 
 
 
-### Definitions {#definitions}
+### Definitions
 
 Because the same word can be used to mean slightly different things in different contexts, and because each studio and package has its own vocabulary, it's important to define exactly what we mean by any particular term in this proposal and use each term consistently.
 
