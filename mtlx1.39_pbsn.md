@@ -3,22 +3,22 @@ MaterialX Physically Based Shading Nodes v1.39
 ----->
 
 
-## MaterialX Physically Based Shading Nodes
+# MaterialX Physically Based Shading Nodes
 
-**Version 1.39**
-Niklas Harrysson - Lumiere Software
-Doug Smythe - Industrial Light & Magic
-Jonathan Stone - Lucasfilm Advanced Development Group
+**Version 1.39**  
+Niklas Harrysson - Lumiere Software  
+Doug Smythe - Industrial Light & Magic  
+Jonathan Stone - Lucasfilm Advanced Development Group  
 April 7, 2022
 
-## Introduction
+# Introduction
 
 The MaterialX Specification describes a number of standard nodes that may be used to construct node graphs for the processing of images, procedurally-generated values, coordinates and other data.  With the addition of user-defined custom nodes, it is possible to describe complete rendering shaders using node graphs. Up to this point, there has been no standardization of the specific shader-semantic nodes used in these node graph shaders, although with the widespread shift toward physically-based shading, it appears that the industry is settling upon a number of specific BSDF and other functions with standardized parameters and functionality.
 
 This document describes a number of shader-semantic nodes implementing widely-used surface scattering, emission and volume distribution functions and utility nodes useful in constructing complex layered rendering shaders using node graphs.  These nodes in combination with other nodes may be used with the MaterialX shader generation (ShaderGen[^1]) system.
 
 
-### Table of Contents
+## Table of Contents
 
 **[Physical Material Model](#physical-material-model)**  
  [Scope](#scope)  
@@ -48,24 +48,24 @@ This document describes a number of shader-semantic nodes implementing widely-us
 
 
 
-## Physical Material Model
+# Physical Material Model
 
 This section describes the material model used in the MaterialX Physically Based Shading (PBS) library and the rules we must follow to be physically plausible.
 
 
-### Scope
+## Scope
 
 A material describes the properties of a surface or medium that involves how it reacts to light. To be efficient, a material model is split into different parts, where each part handles a specific type of light interaction: light being scattered at the surface, light being emitted from a surface, light being scattered inside a medium, etc. The goal of our material model definition is to describe light-material interactions typical for physically plausible rendering systems, including those in feature film production, real-time preview, and game engines.
 
 Our model has support for surface materials, which includes scattering and emission of light from the surface of objects, and volume materials, which includes scattering and emission of light within a participating medium. For lighting, we support local lights and distant light from environments. Geometric modification is supported in the form of bump and normal mapping as well as displacement mapping.
 
 
-### Physically Plausible Materials
+## Physically Plausible Materials
 
 The initial requirements for a physically-plausible material are that it 1) should be energy conserving and 2) support reciprocity. The energy conserving says that the sum of reflected and transmitted light leaving a surface must be less than or equal to the amount of light reaching it. The reciprocity requirement says that if the direction of the traveling light is reversed, the response from the material remains unchanged. That is, the response is identical if the incoming and outgoing directions are swapped. All materials implemented for ShaderGen should respect these requirements and only in rare cases deviate from it when it makes sense for the purpose of artistic freedom.
 
 
-### Quantities and Units
+## Quantities and Units
 
 Radiometric quantities are used by the material model for interactions with the renderer. The fundamental radiometric quantity is **radiance** (measured in _Wm<sup>−2</sup>sr<sup>−1</sup>_) and gives the intensity of light arriving at, or leaving from, a given point in a given direction. If incident radiance is integrated over all directions we get **irradiance** (measured in _Wm<sup>−2</sup>_), and if we integrate this over surface area we get **power** (measured in _W_). Input parameters for materials and lights specified in photometric units can be suitably converted to their radiometric counterparts before being submitted to the renderer.
 
@@ -74,14 +74,14 @@ The interpretation of the data types returned by surface and volume shaders are 
 In general, a color given as input to the renderer is considered to represent a linear RGB color space. However, there is nothing stopping a renderer from interpreting the color type differently, for instance to hold spectral values. In that case, the shader generator for that renderer needs to handle this in the implementation of the nodes involving the color type.
 
 
-### Color Management
+## Color Management
 
 MaterialX supports the use of color management systems to associate colors with specific color spaces. A MaterialX document typically specifies the working color space that is to be used for the document as well as the color space in which input values and textures are given. If these color spaces are different from the working color space, it is the application's and shader generator's responsibility to transform them.
 
 The ShaderGen module has an interface that can be used to integrate support for different color management systems. A simplified implementation with some popular and commonly used color transformations is supplied and enabled by default. A full integration of OpenColorIO ([http://opencolorio.org](http://opencolorio.org)) is planned for the future.
 
 
-### Surfaces
+## Surfaces
 
 In our surface shading model the scattering and emission of light is controlled by distribution functions. Incident light can be reflected off, transmitted through, or absorbed by a surface. This is represented by a Bidirectional Scattering Distribution Function (BSDF). Light can also be emitted from a surface, for instance from a light source or glowing material. This is represented by an Emission Distribution Function (EDF). The PBS library introduces the data types `BSDF` and `EDF` to represent the distribution functions, and there are nodes for constructing, combining and manipulating them.
 
@@ -98,7 +98,7 @@ In order to assign different shaders to each side of a thin-walled object the &l
 Note that in order to have surface shaders set for both sides the geometry has to be set as double-sided. Geometry sidedness is a property not handled by MaterialX and needs to be set elsewhere.
 
 
-#### Layering
+### Layering
 
 In order to simplify authoring of complex materials, our model supports the notion of layering. Typical examples include: adding a layer of clear coat over a car paint material, or putting a layer of dirt or rust over a metal surface. Layering can be done in a number of different ways:
 
@@ -109,12 +109,12 @@ In order to simplify authoring of complex materials, our model supports the noti
 * Shader Input Blending: Calculating and blending many BSDFs or separate surface shaders can be expensive. In some situations good results can be achieved by blending the texture/value inputs instead, before any illumination calculations. Typically one would use this with an über-shader that can simulate many different materials, and by masking or blending its inputs over the surface you get the appearance of having multiple layers, but with less expensive texture or value blending. Examples of this are given in the main MaterialX Specification "pre-shader compositing" example.
 
 
-#### Bump/Normal Mapping
+### Bump/Normal Mapping
 
 The surface normal used for shading calculations is supplied as input to each BSDF that requires it. The normal can be perturbed by bump or normal mapping, before it is given to the BSDF. As a result, one can supply different normals for different BSDFs for the same shading point. When layering BSDFs, each layer can use different bump and normal maps.
 
 
-### Volumes
+## Volumes
 
 In our volume shader model the scattering of light in a participating medium is controlled by a volume distribution function (VDF), with coefficients controlling the rate of absorption and scattering. The VDF represents what physicists call a _phase function, _describing how the light is distributed from its current direction when it is scattered in the medium. This is analogous to how a BSDF describes scattering at a surface, but with one important difference: a VDF is normalized, summing to 1.0 if all directions are considered. Additionally, the amount of absorption and scattering is controlled by coefficients that gives the rate (probability) per distance traveled in world space. The **absorption coefficient** sets the rate of absorption for light traveling through the medium, and the **scattering coefficient** sets the rate of which the light is scattered from its current direction. The unit for these are _m<sup>−1</sup>_.
 
@@ -125,7 +125,7 @@ The &lt;volume> node in the PBS library constructs a volume shader from individu
 VDFs can also be used to describe the interior of a surface. A typical example would be to model how light is absorbed or scattered when transmitted through colored glass or turbid water. This is done by layering a BSDF for the surface transmission over the VDF using a &lt;layer> node.
 
 
-### Lights
+## Lights
 
 Light sources can be divided into environment lights and local lights. Environment lights represent contributions coming from infinitely far away. All other lights are local lights and have a position and extent in space.
 
@@ -134,15 +134,13 @@ Local lights are specified as light shaders assigned to a locator, modeling an e
 Light contributions coming from far away are handled by environment lights. These are typically photographically-captured or procedurally-generated images that surround the whole scene. This category of lights also includes sources like the sun, where the long distance traveled makes the light essentially directional and without falloff. For all shading points, an environment is seen as being infinitely far away.
 
 
-## 
 
-
-## MaterialX PBS Library
+# MaterialX PBS Library
 
 MaterialX includes a library of types and nodes for creating physically plausible materials and lights as described above. This section outlines the content of that library.
 
 
-### Data Types
+## Data Types
 
 * `BSDF`: Data type representing a Bidirectional Scattering Distribution Function.
 * `EDF`: Data type representing an Emission Distribution Function.
@@ -156,7 +154,7 @@ The PBS nodes also make use of the following standard MaterialX types:
 * `displacementshader`: Data type representing a displacement shader.
 
 
-### BSDF Nodes
+## BSDF Nodes
 
 * **`oren_nayar_diffuse_bsdf`**: Constructs a diffuse reflection BSDF based on the Oren-Nayar reflectance model[^2]. A roughness of 0.0 gives Lambertian reflectance.
 
@@ -239,7 +237,7 @@ The PBS nodes also make use of the following standard MaterialX types:
     * `ior` (float): Index of refraction of the thin film layer.  Default is 1.5.
 
 
-### EDF Nodes
+## EDF Nodes
 
 * **`uniform_edf`**: Constructs an EDF emitting light uniformly in all directions.
     * `color` (color3): Radiant emittance of light leaving the surface.  Default is (1, 1, 1).
@@ -264,7 +262,7 @@ The PBS nodes also make use of the following standard MaterialX types:
     * `base` (EDF): The base EDF to be modified. Defaults to "".
 
 
-### VDF Nodes
+## VDF Nodes
 
 * **`absorption_vdf`**: Constructs a VDF for pure light absorption.
     * `absorption` (color3): Absorption rate for the medium (rate per distance traveled in the medium, given in _m<sup>−1</sup>_). Set for each color component/wavelength separately. Default is (0, 0, 0).
@@ -277,7 +275,7 @@ The PBS nodes also make use of the following standard MaterialX types:
     * `anisotropy` (float): Anisotropy factor, controlling the scattering direction, range [-1.0, 1.0]. Negative values give backwards scattering, positive values give forward scattering, and a value of 0.0 (the default) gives uniform scattering.
 
 
-### Shader Nodes
+## Shader Nodes
 
 * **`surface`**: Constructs a surface shader describing light scattering and emission for surfaces. By default the node will construct a shader for a closed surface, representing an interface to a solid volume. In this mode refraction and scattering is enabled for any transmissive BSDFs connected to this surface. By setting thin_walled to "true" the node will instead construct a thin-walled surface, representing a surface with an infinitely thin volume. In thin-walled mode refraction and scattering will be disabled. Thin-walled mode must be enabled to construct a double-sided material with different surface shaders on the front and back side of geometry (using &lt;surfacematerial> in the standard library).  Output type "surfaceshader".
     * `bsdf` (BSDF): Bidirectional scattering distribution function for the surface.  Default is "".
@@ -301,7 +299,7 @@ The PBS nodes also make use of the following standard MaterialX types:
     * `exposure` (float): Exposure control for the light's emittance. Defaults to 0.0.
 
 
-### Utility Nodes
+## Utility Nodes
 
 * **`mix`**: Mix two same-type distribution functions according to a weight. Performs horizontal layering by linear interpolation between the two inputs, using the function "bg∗(1−mix) + fg∗mix".
     * `bg` (BSDF or EDF or VDF): The first distribution function.  Defaults to "".
@@ -341,15 +339,13 @@ The PBS nodes also make use of the following standard MaterialX types:
     * `extinction` (**output**, vector3): Computed extinction coefficient.
 
 
-## 
 
-
-## Shading Model Examples
+# Shading Model Examples
 
 This section contains examples of shading model implementations using the MaterialX PBS library. For all examples, the shading model is defined via a &lt;nodedef> interface plus a nodegraph implementation. The resulting nodes can be used as shaders by a MaterialX material definition.
 
 
-### Autodesk Standard Surface
+## Autodesk Standard Surface
 
 This is a surface shading model used in Autodesk products created by the Solid Angle team for the Arnold renderer. It is an über shader built from ten different BSDF layers[^13].
 
@@ -357,7 +353,7 @@ A MaterialX definition and nodegraph implementation of Autodesk Standard Surface
 [https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/standard_surface.mtlx](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/standard_surface.mtlx)
 
 
-### UsdPreviewSurface
+## UsdPreviewSurface
 
 This is a shading model proposed by Pixar for USD[^14]. It is meant to model a physically based surface that strikes a balance between expressiveness and reliable interchange between current day DCC’s and game engines and other real-time rendering clients.
 
@@ -365,7 +361,7 @@ A MaterialX definition and nodegraph implementation of UsdPreviewSurface can be 
 [https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/usd_preview_surface.mtlx](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/usd_preview_surface.mtlx)
 
 
-### Khronos glTF PBR
+## Khronos glTF PBR
 
 This is a shading model using the PBR material extensions in Khronos glTF specification.
 
@@ -373,7 +369,7 @@ A MaterialX definition and nodegraph implementation of glTF PBR can be found her
 [https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/gltf_pbr.mtlx](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/gltf_pbr.mtlx)
 
 
-## Shading Translation Graphs
+# Shading Translation Graphs
 
 The MaterialX PBS Library includes a number of nodegraphs that can be used to approximately translate the input parameters for one shading model into values to drive the inputs of a different shading model, to produce the same visual results to the degree the differences between the shading models allow.  Currently, the library includes translation graphs for:
 
@@ -381,7 +377,7 @@ The MaterialX PBS Library includes a number of nodegraphs that can be used to ap
 * Autodesk Standard Surface to glTF
 
 
-## References
+# References
 
 [^1]: <https://github.com/materialx/MaterialX/blob/master/documents/DeveloperGuide/ShaderGeneration.md>
 
