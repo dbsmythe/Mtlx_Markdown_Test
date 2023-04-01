@@ -200,7 +200,7 @@ Coordinate values should be separated by commas (with or without whitespace), wi
 
 While color<em>N</em> and vector<em>N</em> types both describe vectors of floating-point values, they differ in a number of significant ways.  First, the final channel of a color4 value is interpreted as an alpha channel by compositing operators, and is only meaningful within the [0, 1] range, while the fourth channel of a vector4 value _could be_ (but is not necessarily) interpreted as the "w" value of a homogeneous 3D vector.  Additionally, values of type color3 and color4 are always associated with a particular color space and are affected by color transformations, while values of type vector3 and vector4 are not.  More detailed rules for color<em>N</em> and vector<em>N</em> operations may be found in the [Standard Operator Nodes](#standard-operator-nodes) section of the specification.
 
-**Matrix **types: MaterialX supports two matrix types that may be used to represent geometric and color transforms.  The `matrix33` and `matrix44` types, respectively, represent 3x3 and 4x4 matrices and are written as nine or sixteen float values separated by commas, in row-major order:
+**Matrix** types: MaterialX supports two matrix types that may be used to represent geometric and color transforms.  The `matrix33` and `matrix44` types, respectively, represent 3x3 and 4x4 matrices and are written as nine or sixteen float values separated by commas, in row-major order:
 
 ```
     matrix33value = "1,0,0, 0,1,0, 0,0,1"
@@ -243,7 +243,7 @@ In addition to the standard data types, MaterialX supports the specification of 
 
 Types can be declared to have a specific semantic, which can be used to determine how values of that type should be interpreted, and how nodes outputting that type can be connected.  Currently, MaterialX defines three semantics:
 
-* "`color`": the type is interpreted to represent or contain a color, and thus should be color-managed as described in the **Color Spaces and Color Management Systems** section.
+* "`color`": the type is interpreted to represent or contain a color, and thus should be color-managed as described in the [Color Spaces and Color Management Systems](#color-spaces-and-color-management-systems) section.
 * "`shader`": the type is interpreted as a shader output type; nodes or nodegraphs which output a type with a "shader" semantic can be used to define a shader-type node, which can be connected to inputs of "material"-type nodes.
 * "`material`": the type is interpreted as a material output type; nodes or nodegraphs which output a type with a "material" semantic can be referenced by a &lt;materialassign> in a &lt;look>.
 
