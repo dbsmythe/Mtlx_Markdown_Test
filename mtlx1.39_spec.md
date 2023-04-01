@@ -3,7 +3,7 @@ MaterialX Specification v1.39
 ----->
 
 
-## MaterialX: An Open Standard for Network-Based CG Object Looks
+# MaterialX: An Open Standard for Network-Based CG Object Looks
 
 **Version 1.39**  
 Doug Smythe - Industrial Light & Magic  
@@ -11,7 +11,7 @@ Jonathan Stone - Lucasfilm Advanced Development Group
 March 26, 2023
 
 
-## Introduction
+# Introduction
 
 Computer graphics production studios commonly use workflows involving multiple software tools for different parts of the production pipeline.  There is also a significant amount of sharing and outsourcing of work across facilities, requiring companies to hand off fully look-developed models to other divisions or studios which may use different software packages and rendering systems.  In addition, studio rendering pipelines that previously used monolithic shaders built by expert programmers or technical directors with fixed, predetermined texture-to-shader connections and hard-coded texture color-correction options are now using more flexible node-based shader networks built up by connecting images and procedurals to shader inputs through a graph of image processing and blending operators.
 
@@ -28,7 +28,7 @@ This document describes the core MaterialX specification.  Companion documents *
 
 
 
-### Table of Contents
+## Table of Contents
 
 **[Introduction](#introduction)**  
 
@@ -84,7 +84,7 @@ This document describes the core MaterialX specification.  Companion documents *
 **[References](#references)**
 
 
-## MaterialX Overview
+# MaterialX Overview
 
 The diagram below gives a high-level overview of a typical MaterialX look definition.  A directed acyclic graph of pattern generation and processing nodes is connected to inputs of a surface Shader which defines a layered BSDF response.  One or more shaders can be connected to form a Material, which is ultimately associated with specific scene geometry via a MaterialAssign, a number of which comprise a Look.  The assignments of Materials to geometries can be defined within a MaterialX document in applications supporting MaterialX Geometry Extensions, or using an alternative mechanism such as USD[^1] or a native application's toolset.  Each of the pattern nodes and even the Shaders may in turn be implemented using a graph of nodes: these NodeGraphs are given a parameter interface using NodeDefs, and these implementations may be reused with different input values just like any other Standard node defined by MaterialX.
 
@@ -94,7 +94,7 @@ MaterialX also allows the specification of additional information not shown in t
 
 
 
-### Definitions
+## Definitions
 
 Because the same word can be used to mean slightly different things in different contexts, and because each studio and package has its own vocabulary, it's important to define exactly what we mean by any particular term in this proposal and use each term consistently.
 
@@ -124,7 +124,7 @@ A **Target** is a software environment that interprets MaterialX content to gene
 
 
 
-### MaterialX Names
+## MaterialX Names
 
 All elements in MaterialX (nodes, materials, shaders, etc.) are required to have a `name` attribute of type "string".  The `name` attribute of a MaterialX element is its unique identifier, and no two elements within the same scope (i.e. elements with the same parent) may share a name.
 
@@ -132,7 +132,7 @@ Element names are restricted to upper- and lower-case letters, numbers, and unde
 
 
 
-### MaterialX Data Types
+## MaterialX Data Types
 
 All values, input and output ports, and streams in MaterialX are strongly typed, and are explicitly associated with a specific data type.  The following standard data types are defined by MaterialX:
 
@@ -237,7 +237,7 @@ While color<em>N</em> and vector<em>N</em> types both describe vectors of floati
 
 
 
-### Custom Data Types
+## Custom Data Types
 
 In addition to the standard data types, MaterialX supports the specification of custom data types for the inputs and outputs of shaders and custom nodes.  This allows documents to describe data streams of any complex type an application may require; examples might include spectral color samples or compound geometric data.
 
@@ -272,7 +272,7 @@ The standard MaterialX distribution includes definitions for four "shader"-seman
 
 
 
-### MTLX File Format Definition
+## MTLX File Format Definition
 
 An MTLX file (with file extension ".mtlx") has the following general form:
 
@@ -305,7 +305,7 @@ Attributes for a &lt;materialx> element:
 
 
 
-### Color Spaces and Color Management Systems
+## Color Spaces and Color Management Systems
 
 MaterialX supports the use of color management systems to associate RGB colors and images with specific color spaces.  MaterialX documents typically specify the working color space of the application that created them, and any input color or image described in the document can specify the name of its color space if different from the working color space.  This allows applications using MaterialX to transform color values within input colors and images from their original color space into a desired working color space upon ingest.  MaterialX does not specify _how_ or _when_ color values should be transformed: that is up to the host application, which can use any appropriate method including code generation, conversion when loading images into memory, maintaining cached or pre-converted image textures, etc.  It is generally presumed that the working color space of a MaterialX document will be linear (as opposed to log, a display-referred space such as sRGB, or some other non-linear encoding), although this is not a firm requirement.
 
@@ -340,7 +340,7 @@ MaterialX reserves the color space name "none" to mean no color space conversion
 
 
 
-### Units
+## Units
 
 MaterialX allows floating-point and vector values to be defined in terms of a specific unit and unit type, and can automatically convert values from their specified unit into a scene unit of the same type specified by the application.  This allows images and the quantities they represent such as displacement amount to be specified at an absolute real-world size, and then be converted automatically to the expected scene units of the application.
 
@@ -369,7 +369,7 @@ Please refer to the [Inputs](#inputs), [Custom Node Declaration: NodeDef Element
 
 
 
-### MaterialX Namespaces
+## MaterialX Namespaces
 
 MaterialX supports the specification of “namespaces”, which qualify the MaterialX names of all elements within their scope.  Namespaces are specified via a `namespace` attribute in a &lt;materialx> element, and other MaterialX files which &lt;xi:include> this .mtlx file can refer to its content without worrying about element or object naming conflicts, similar to the way namespaces are used in various programming languages.  It is permissible for multiple &lt;materialx> elements to specify the same namespace; the elements from each will simply be merged into the same namespace.  &lt;materialx> elements which do not specify a namespace will define elements into the (unnamed) global namespace.  MaterialX namespaces are most commonly used to define families of custom nodes (nodedefs), material libraries, or commonly-used network shaders or nodegraphs.
 
@@ -428,7 +428,7 @@ A `namespace` attribute may also be added to individual &lt;nodedef>s or &lt;nod
 ```
 
 
-#### Geometric Properties
+### Geometric Properties
 
 Geometric Properties, or "geomprops", are intrinsic or user-defined surface coordinate properties of geometries referenced in a specific space and/or index, and are functionally equivalent to USD's concept of "primvars".  A number of geometric properties are predefined in MaterialX: `position`, `normal`, `tangent`, `bitangent`, `texcoord` and `geomcolor`, the values of which can be accessed in nodegraphs using elements of those same names; see the [Geometric Nodes](#geometric-nodes) section below for details.  The value of a varying geometric property can also be used as the default value for a node input using a `defaultgeomprop` attribute.
 
@@ -462,7 +462,7 @@ A geompropdef may also specify a `unittype` and a `unit` to indicate that the ge
 
 
 
-### File Prefixes
+## File Prefixes
 
 As a shorthand convenience, MaterialX allows the specification of a `fileprefix` attribute which will be prepended to input values of type "filename" (e.g. `file` inputs in `<image>` nodes, or any shader input of type "filename") specified within the scope of the element defining the `fileprefix`.  Note that `fileprefix` values are only prepended to input with a `type` attribute that explicitly states its data type as “filename”.  Since the values of the prefix and the filename are string-concatenated, the value of a `fileprefix` should generally end with a "/".  Fileprefixes are frequently used to split off common path components for asset directories, e.g. to define an asset's "texture root" directory.
 
@@ -495,7 +495,7 @@ Note: Application implementations have access to both the raw input values and a
 
 
 
-### Filename Substitutions
+## Filename Substitutions
 
 Filename input values for various nodes can include one or more special strings, which will be replaced as described in the following table.  Substitution strings within &lt;>'s come from the current geometry, strings within []'s come from the MaterialX state, and strings within {}'s come from the host application environment.
 
@@ -513,7 +513,7 @@ Note: Implementations are expected to retain substitution strings within filenam
 
 
 
-## Nodes
+# Nodes
 
 Nodes are individual data generation or processing "blocks".  Node functionality can range from simple operations such as returning a constant color value or adding two input values, to more complex image processing operations, 3D spatial data operations, or even complete shader BxDFs.  Nodes are connected together into a network or "node graph", and pass typed data streams between them.
 
@@ -535,7 +535,7 @@ MaterialX defines a number of Standard Nodes which all implementations should su
 
 
 
-### Inputs
+## Inputs
 
 Node elements contain zero or more &lt;input> elements defining the name, type, and value or connection for each node input.  Input elements can assign an explicit uniform value by providing a `value` attribute, make a connection to the output of another node by providing a `nodename` attribute, or make a connection to the output of a nodegraph by providing a `nodegraph` attribute.  An optional `output` attribute may also be provided for &lt;input> elements, allowing the input to connect to a specific, named output of the referenced upstream node or nodegraph.  If the referenced node/nodegraph has multiple outputs, `output` is required; if it has only one output, the `output` attribute of the &lt;input> is ignored.  Input elements may be defined to only accept uniform values, in which case the input may provide a `value` or a `nodename` connection to the output of a &lt;constant> node (possibly through one or more no-op &lt;dot> nodes) or any other node whose output is explicitly declared to be "uniform" (such as &lt;geompropvalueuniform>`)`, but may not provide a `nodename` or `nodegraph` connection to any arbitrary node output or to any nodegraph output.  String- and filename-type inputs are required to be "uniform", as are any array-typed inputs.  Input elements may be connected to an external parameter interface in the node definition, allowing them to be assigned values from materials or node instantiations; this includes "uniform" and string/filename-type inputs, however, the same connectability restrictions listed above apply to the inputs of the material or node instance.  Inputs may only be connected to node/nodegraph outputs or nodedef interface inputs of the same type, though it is permissible for a `string`-type output to be connected to a `filename`-type input (but not the other way around).
 
@@ -570,7 +570,7 @@ Standard MaterialX nodes have exactly one output, while custom nodes may have an
 
 
 
-### Node Graph Elements
+## Node Graph Elements
 
 A graph containing any number of nodes and output declarations forms a Node Graph, which may be enclosed within a &lt;nodegraph> element to group them together into a single functional unit.  Please see the [Custom Node Definition Using Node Graphs](#custom-node-definition-using-node-graphs) section below for details on how nodegraphs can be used to describe the functionality of new nodes.
 
@@ -583,7 +583,7 @@ A graph containing any number of nodes and output declarations forms a Node Grap
 
 
 
-### Output Elements
+## Output Elements
 
 Output data streams are defined using **&lt;output>** elements, and may be used to declare which output streams are connectable to other MaterialX elements.  Within a node graph, an &lt;output> element declares an output stream that may be connected to a shader input or to the input of a referencing node in another graph when the nodegraph is the implementation of a custom node.  See the [Custom Node Definition Using Node Graphs](#custom-node-definition-using-node-graphs) section for details on the use of node graphs as node implementations.
 
@@ -609,14 +609,14 @@ The `colorspace`, `width`, `height` and `bitdepth` attributes are intended to be
 
 
 
-### Standard Source Nodes
+## Standard Source Nodes
 
 Source nodes use external data and/or procedural functions to form an output; they do not have any required inputs.  Each source node must define its output type.
 
 This section defines the Source Nodes that all MaterialX implementations are expected to support.  Standard Source Nodes are grouped into the following classifications: [Texture Nodes](#texture-nodes), [Procedural Nodes](#procedural-nodes), [Geometric Nodes](#geometric-nodes), [Global Nodes](#global-nodes) and [Application Nodes](#application-nodes).
 
 
-#### Texture Nodes
+### Texture Nodes
 
 Texture nodes are used to read filtered image data from image or texture map files for processing within a node graph.
 
@@ -667,7 +667,7 @@ Additional texture nodes, including **`<tiledimage>`** and **`<triplanarprojecti
 
 
 
-#### Procedural Nodes
+### Procedural Nodes
 
 Procedural nodes are used to generate value data programmatically.
 
@@ -770,7 +770,7 @@ Additional source nodes, including **`<ramp4>`**, may be found in the **Material
 
 
 
-#### Geometric Nodes
+### Geometric Nodes
 
 Geometric nodes are used to reference local geometric properties from within a node graph:
 
@@ -830,7 +830,7 @@ Applications may also reference other renderer-specific named spaces, at the exp
 
 
 
-#### Global Nodes
+### Global Nodes
 
 Global nodes generate color data using non-local geometric context, requiring access to geometric features beyond the surface point being processed.  This non-local context can be provided by tracing rays into the scene, rasterizing scene geometry, or any other appropriate method.
 
@@ -848,7 +848,7 @@ Standard Global nodes:
 
 
 
-#### Application Nodes
+### Application Nodes
 
 Application nodes are used to reference application-defined properties within a node graph, and have no inputs:
 
@@ -867,7 +867,7 @@ Standard Application nodes:
 
 
 
-### Standard Operator Nodes
+## Standard Operator Nodes
 
 Operator nodes process one or more required input streams to form an output.  Like other nodes, each operator must define its output type, which in most cases also determines the type(s) of the required input streams.
 
@@ -892,7 +892,7 @@ This section defines the Operator Nodes that all MaterialX implementations are e
 
 
 
-#### Math Nodes
+### Math Nodes
 
 Math nodes have one or two spatially-varying inputs, and are used to perform a math operation on values in one spatially-varying input stream, or to combine two spatially-varying input streams using a specified math operation.  The given math operation is performed for each channel of the input stream(s), and the data type of each input must either match that of the input stream(s), or be a float value that will be applied to each channel separately.
 
@@ -1062,7 +1062,7 @@ Math nodes have one or two spatially-varying inputs, and are used to perform a m
 
 
 
-#### Adjustment Nodes
+### Adjustment Nodes
 
 Adjustment nodes have one input named "in", and apply a specified function to values in the incoming stream.
 
@@ -1104,12 +1104,12 @@ Additional adjustment nodes, including **`<contrast>`**, **`<range>`**, **`<satu
 
 
 
-#### Compositing Nodes
+### Compositing Nodes
 
 Compositing nodes have two (required) inputs named `fg` and `bg`, and apply a function to combine them.  Compositing nodes are split into five subclassifications: [Premult Nodes](#premult-nodes), [Blend Nodes](#blend-nodes), [Merge Nodes](#merge-nodes), [Masking Nodes](#masking-nodes), and the [Mix Node](#mix-node).
 
 
-##### Premult Nodes
+#### Premult Nodes
 
 Premult nodes operate on 4-channel (color4) inputs/outputs, have one input named `in`, and either apply or unapply the alpha to the float or RGB color.
 
@@ -1120,7 +1120,7 @@ Premult nodes operate on 4-channel (color4) inputs/outputs, have one input named
     * `in` (color4): the input value or nodename; default is (0,0,0,1).
 
 
-##### Blend Nodes
+#### Blend Nodes
 
 Blend nodes take two 1-4 channel inputs and apply the same operator to all channels (the math for alpha is the same as for R or RGB).  In the Blend Operator table, "F" and "B" refer to any individual channel of the `fg` and `bg` inputs respectively.  Blend nodes support an optional float input `mix`, which can be used to mix the original `bg` value (`mix`=0) with the result of the blend operation (`mix`=1, the default).
 
@@ -1136,7 +1136,7 @@ Blend nodes take two 1-4 channel inputs and apply the same operator to all chann
 | **`overlay`** | 2FB if F&lt;0.5;<br> 1-(1-F)(1-B) if F>=0.5 | float, color<em>N</em> |
 
 
-##### Merge Nodes
+#### Merge Nodes
 
 Merge nodes take two 4-channel (color4) inputs and use the built-in alpha channel(s) to control the compositing of the `fg` and `bg` inputs.  In the Merge Operator table, "F" and "B" refer to the non-alpha channels of the `fg` and `bg` inputs respectively, and "f" and "b" refer to the alpha channels of the `fg` and `bg` inputs.  Merge nodes are not defined for 1-channel or 3-channel inputs, and cannot be used on vector<em>N</em> streams.  Merge nodes support an optional float input `mix`, which can be used to mix the original `bg` value (`mix`=0) with the result of the blend operation (`mix`=1, the default).
 
@@ -1151,7 +1151,7 @@ Merge nodes take two 4-channel (color4) inputs and use the built-in alpha channe
 | **`over`** | F+B(1-f) | f+b(1-f) |
 
 
-##### Masking Nodes
+#### Masking Nodes
 
 Masking nodes take one 1-4 channel input `in` plus a separate float `mask` input and apply the same operator to all channels (if present, the math for alpha is the same as for R or RGB).  The default value for the `mask` input is 1.0 for the `inside` operator, and 0.0 for the `outside` operator  In the Masking Operator table, "F" refers to any individual channel of the `in` input.
 
@@ -1165,7 +1165,7 @@ Masking nodes take one 1-4 channel input `in` plus a separate float `mask` input
 Note: for all types, `inside` is equivalent to the `multiply` node: both operators exist to provide companion functions for other data types or their respective inverse or complementary operations.
 
 
-##### Mix Node
+#### Mix Node
 
 The Mix node takes two 1-4 channel inputs `fg` and `bg` plus a separate 1-channel (float) or N-channel (same type and number of channels as `fg` and `bg`) `mix` input and mixes the `fg` and `bg` according to the mix value, either uniformly for a "float" `mix` type, or per-channel for non-float `mix` types.  The equation for "mix" is as follows, with "F" and "B" referring to any channel of the `fg` and `bg` inputs respectively (which can be float, color<em>N</em> or vector<em>N</em> but must match), and "m" referring to the float `mix` input value (which has a default value of 0):
 
@@ -1179,7 +1179,7 @@ See also the [Shader Nodes](#shader-nodes) section below for additional `mix` op
 
 
 
-#### Conditional Nodes
+### Conditional Nodes
 
 Conditional nodes are used to compare values of two streams, or to select a value from one of several streams.
 
@@ -1212,7 +1212,7 @@ Conditional nodes are used to compare values of two streams, or to select a valu
 
 
 
-#### Channel Nodes
+### Channel Nodes
 
 Channel nodes are used to perform channel manipulations and data type conversions on float, color<em>N</em>, and vector<em>N</em> streams.
 
@@ -1260,7 +1260,7 @@ Additional channel nodes, including **`<extract>`** and **`<separateN>`**, may b
 
 
 
-#### Convolution Nodes
+### Convolution Nodes
 
 Convolution nodes have one input named "in", and apply a defined convolution function on the input stream.  Some of these nodes may not be implementable in ray tracing applications; they are provided for the benefit of purely 2D image processing applications.
 
@@ -1277,7 +1277,7 @@ Convolution nodes have one input named "in", and apply a defined convolution fun
 
 
 
-#### Shader Nodes
+### Shader Nodes
 
 Shader nodes construct a shader (a node with a shader semantic output type) from the specified inputs, which may then be connected to a material.  Standard library shaders do not respond to external illumination; please refer to the **MaterialX Physically Based Shading Nodes** document for definitions of additional nodes and shader constructors which do respond to illumination.
 
@@ -1292,14 +1292,14 @@ Shader nodes construct a shader (a node with a shader semantic output type) from
 
 
 
-### Standard Node Inputs
+## Standard Node Inputs
 
 All standard nodes which define a `defaultinput` or `default` value support the following input:
 
 * `disable` (uniform boolean): if set to true, the node will pass its default input or value to its output, effectively disabling the node; default is false.  Applications may choose to implement the `disable` input by skipping over the disabled node during traversal and instead passing through a connection to the defaultinput node or outputting the node's default value, rather than using an actual `disable` input in the node implementation.
 
 
-### Standard UI Attributes
+## Standard UI Attributes
 
 All elements support the following additional UI-related attributes:
 
@@ -1325,7 +1325,7 @@ The &lt;input> and &lt;token> elements within &lt;nodedef>s and node instantiati
 
 
 
-### Backdrop Elements
+## Backdrop Elements
 
 Backdrop elements are used to contain, group, and document nodes within a node graph, and they have no impact on the functionality of the graph.  The following attributes are supported by &lt;backdrop> elements:
 
@@ -1337,7 +1337,7 @@ Backdrop elements also support the standard `width`, `height`, `xpos`, `ypos` an
 
 
 
-### Node Graph Examples
+## Node Graph Examples
 
 Example 1: Simple merge of two single-layer images with a separate mask image, followed by a simple color operation.
 
@@ -1429,12 +1429,12 @@ Example 2: A more complex example, using geometry properties to define two diffu
 
 
 
-## Customization, Targeting and Shading
+# Customization, Targeting and Shading
 
 While the Standard Nodes are considered universal across all MaterialX applications, there are many circumstances in which one would like to extend this with new custom functionality, or define functionality or underlying implementations specific to different applications or renderers.  This includes the definition of nodes for shading and materials.
 
 
-### Target Definition
+## Target Definition
 
 MaterialX supports the definition of nodes, attributes and inputs that are specific to particular rendering "targets".  This allows a single implementation to restrict certain values or nodes to only the targets for which they are valid, or to allow separate definitions of the same node functionality for different renderers.
 
@@ -1459,7 +1459,7 @@ In the above example, any renderer that requests nodes/inputs/attributes for the
 A targetdef element may also specify additional custom attributes for that target, such as configuration or code generation options.
 
 
-### Custom Attributes and Inputs
+## Custom Attributes and Inputs
 
 While the MaterialX specification describes the attributes and elements that are meaningful to MaterialX-compliant applications, it is permissible to add custom attributes and inputs to standard MaterialX elements.  These custom attributes and child elements are ignored by applications that do not understand them, although applications should preserve and re-output them with their values and connections even if they do not understand their meaning.
 
@@ -1517,12 +1517,12 @@ When using a node, the definition appropriate for the current target will automa
 ```
 
 
-### Custom Nodes
+## Custom Nodes
 
 Specific applications will commonly support sources and operators that do not map directly to standard MaterialX nodes.  Individual implementations may provide their own custom nodes, with &lt;nodedef> elements to declare their parameter interfaces, and &lt;implementation> and/or &lt;nodegraph> elements to define their behaviors.
 
 
-#### Custom Node Declaration: NodeDef Elements
+### Custom Node Declaration: NodeDef Elements
 
 Each custom node must be explicitly declared with a &lt;nodedef> element, with child &lt;input>, &lt;token> and &lt;output> elements specifying the expected names and types of the node’s inputs and output(s).
 
@@ -1625,7 +1625,7 @@ The &lt;output> elements for NodeDefs are similar to those for NodeGraph outputs
 
 
 
-#### Custom Node Definition: Implementation Elements
+### Custom Node Definition: Implementation Elements
 
 Once the parameter interface of a custom node has been declared through a &lt;nodedef>, MaterialX provides two methods for precisely defining its functionality: via an &lt;implementation> element that references external source code, or via a &lt;nodegraph> element that composes the required functionality from existing nodes.  Providing a definition for a custom node is optional in MaterialX, but is recommended for maximum clarity and portability.
 
@@ -1731,7 +1731,7 @@ Here is an example of a two-output node definition and external implementation d
 
 
 
-#### Custom Node Definition Using Node Graphs
+### Custom Node Definition Using Node Graphs
 
 Alternatively, a custom node's implementation may be described using a Node Graph.  A &lt;nodegraph> element wraps a graph of standard or custom nodes, taking the inputs and producing the output(s) described in the specified &lt;nodedef>.
 
@@ -1805,7 +1805,7 @@ Example of a custom node defined using a nodegraph:
 The inputs of the nodegraph are declared by the &lt;nodedef>, and the nodes within the nodegraph reference those inputs using `interfacename` attributes.  The "fg" and "bg" inputs provide default values which are used if an input is left unconnected when the custom node is used, and the "amount" input defines a default value which will be used if invocations of the node do not explicitly provide a value for "amount".
 
 
-#### Custom Node Use
+### Custom Node Use
 
 Once defined with a &lt;nodedef>, using a custom node within a node graph follows the same syntax as any other standard node: the name of the element is the name of the custom node, and the MaterialX type of the node's output is required; the custom node's child elements define connections of inputs to other node outputs as well as any input values for the custom node.
 
@@ -1841,7 +1841,7 @@ When invoking nodes with multiple outputs, the `type` of the node should be decl
 
 
 
-### Shader Nodes
+## Shader Nodes
 
 Custom nodes that output data types with a "shader" semantic are referred to in MaterialX as "Shader Nodes".  Shaders, along with their inputs, are declared using the same &lt;nodedef>, &lt;implementation> and &lt;nodegraph> elements described above:
 
@@ -1899,7 +1899,7 @@ An input with a shader-semantic type may be given a value of "" to indicate no s
 
 
 
-#### Standard Shader-Semantic Operator Nodes
+### Standard Shader-Semantic Operator Nodes
 
 The Standard MaterialX Library defines the following nodes and node variants operating on "shader"-semantic types.
 
@@ -1916,7 +1916,7 @@ The Standard MaterialX Library defines the following nodes and node variants ope
     * `opacity` (float): surface cutout opacity; default is 1.0
 
 
-#### AOV Output Elements
+### AOV Output Elements
 
 A functional nodegraph with either a "shader" or "material"-semantic output type may contain a number of &lt;aovoutput> elements to declare arbitrary output variables ("AOVs") which the renderer can see and output as additional streams of information.  AOVoutputs must be of type float, color3 or vector3 for pre-shading "pattern" values, or BSDF or EDF for shader-node output values; the renderer is expected to extract the appropriate color-like information from BSDF and EDF types.  AOVs defined within a shader-semantic node instantiated within this functional nodegraph may be "passed along" and potentially renamed (but may not be modified or operated on in any way) by providing a sourceaov attribute in the &lt;aovoutput>.
 
@@ -1977,7 +1977,7 @@ Note: while it is syntactically possible to create &lt;aovoutput>s for geometric
 
 
 
-### Material Nodes
+## Material Nodes
 
 Custom nodes that output data types with a "material" semantic are referred to in MaterialX as "Material Nodes".  Material nodes typically have one or more "shader" semantic inputs which establish what shaders the material references; previous versions of MaterialX used &lt;shaderref> elements to establish these shader-to-material connections.  Material Nodes are declared using the same &lt;nodedef> elements as described above:
 
@@ -2213,7 +2213,7 @@ Example: A material to blend between three different surface layers using mask t
 ```
 
 
-### Material Variants
+## Material Variants
 
 A Variant is a container for any number of uniform values for material inputs and interface tokens.  One or more mutually-exclusive variants are defined as part of a &lt;variantset>; variants may not be defined outside of a &lt;variantset>.
 
@@ -2244,7 +2244,7 @@ Variants and variantsets are not intrinsically associated with any particular ma
 Variants and variantsets can be defined in any MaterialX implementation, but because variants are applied to materials within a &lt;look>, they can only be applied in applications supporting MaterialX Geometry Extensions; please see the **Look Assignment Elements** section in that document for information on using material variants.
 
 
-## References
+# References
 
 [^1]: <https://graphics.pixar.com/usd/release/index.html>
 
