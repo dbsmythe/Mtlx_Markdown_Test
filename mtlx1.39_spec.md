@@ -293,13 +293,13 @@ Standard XML XIncludes are supported ([http://en/wikipedia.org/wiki/XInclude](ht
   <input name="example" type="string" value="&quot;text in quotes&quot;"/>
 ```
 
-To support stringarray types and strings or stringarrays within custom types, MaterialX supports a non-standard XML convention where a comma (and any following whitespace) is a separator for strings within a stringarray, a comma or semicolon preceded by a backslash is interpreted as a regular comma or semicolon rather than as a separator, and two backslashes are interpreted as a single backslash.
+To support stringarray types, MaterialX supports a non-standard XML convention where a comma (and any following whitespace) is a separator for strings within a stringarray, a comma or semicolon preceded by a backslash is interpreted as a regular comma or semicolon rather than as a separator, and two backslashes are interpreted as a single backslash.
 
 Each XIncluded document must itself be a valid MTLX file, containing an XML header and its own root `<materialx>` element, the children of which are added to the root element of the including document.  Hierarchical root-level attributes such as `colorspace` and `namespace` are distributed to the included children to maintain correct semantics within the including MaterialX document.
 
 Attributes for a &lt;materialx> element:
 
-* `version `(string, required): a string containing the version number of the MaterialX specification that this document conforms to, specified as a major and minor number separated by a dot.  The MaterialX library automatically upgrades older-versioned documents to the current MaterialX version at load time.
+* `version` (string, required): a string containing the version number of the MaterialX specification that this document conforms to, specified as a major and minor number separated by a dot.  The MaterialX library automatically upgrades older-versioned documents to the current MaterialX version at load time.
 * `colorspace` (string, optional): the name of the "working color space" for this element and all of its descendants.  This is the default color space for all image inputs and color values, and the color space in which all color computations will be performed.  The default is "none", for no color management.
 * `namespace` (string, optional): defines the namespace for all elements defined within this &lt;materialx> scope.  Please see the [MaterialX Namespaces](#materialx-namespaces) section below for details.
 
@@ -464,7 +464,7 @@ A geompropdef may also specify a `unittype` and a `unit` to indicate that the ge
 
 ### File Prefixes
 
-As a shorthand convenience, MaterialX allows the specification of a `fileprefix` attribute which will be prepended to input values of type "filename" (e.g. `file` inputs in `&lt;image>` nodes, or any shader input of type "filename") specified within the scope of the element defining the `fileprefix`.  Note that `fileprefix` values are only prepended to input with a `type` attribute that explicitly states its data type as “filename”.  Since the values of the prefix and the filename are string-concatenated, the value of a `fileprefix` should generally end with a "/".  Fileprefixes are frequently used to split off common path components for asset directories, e.g. to define an asset's "texture root" directory.
+As a shorthand convenience, MaterialX allows the specification of a `fileprefix` attribute which will be prepended to input values of type "filename" (e.g. `file` inputs in `<image>` nodes, or any shader input of type "filename") specified within the scope of the element defining the `fileprefix`.  Note that `fileprefix` values are only prepended to input with a `type` attribute that explicitly states its data type as “filename”.  Since the values of the prefix and the filename are string-concatenated, the value of a `fileprefix` should generally end with a "/".  Fileprefixes are frequently used to split off common path components for asset directories, e.g. to define an asset's "texture root" directory.
 
 So the following snippets are equivalent:
 
