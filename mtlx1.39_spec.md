@@ -1468,18 +1468,18 @@ If an application requires additional information related to any MaterialX eleme
 
 ```
   <attributedef name="name" attrname="attrname" type="type" value="defaultvalue"
-         [target="targets"] [elements="elements"] [exportable="true"]/>
+               [target="targets"] [elements="elements"] [exportable="true"]/>
 ```
 
 where _name_ is a unique name for the attributedef, _attrname_ is the name of the custom attribute to define, _type_ is the type of the attribute (typically string, stringarray, integer or boolean, although any MaterialX type is allowed), _defaultvalue_ is the default value for the attribute, _target_ is an optional list of targets to which this attribute applies, and _elements_ is an optional list of element names or elementname/inputname in which the attribute may be used.  It is also permissible to provide enum and enumvalues attributes for an attributedef, to define specific labels and values that the custom attribute is allowed to take, using the same syntax and limitations as enum/enumvalues on nodedef inputs and tokens (see below).  By default, a custom attribute is not emitted as metadata in generated shaders, but can be exported if the `exportable` attribute is set to "true".  Examples:
 
 ```
   <attributedef name="AD_maxmtlname" attrname="maxmtlname" type="string" value=""
-         target="3dsmax" elements="surfacematerial"/>
+                target="3dsmax" elements="surfacematerial"/>
   <attributedef name="AD_updir" attrname="updir" type="integer" value="1"
-         enum="Yup,Zup" enumvalues="1,2"/>
+                enum="Yup,Zup" enumvalues="1,2"/>
   <attributedef name="AD_img_vflip" attrname="vflip" type="boolean" value="false"
-         target="mystudio" elements="image/file"/>
+                target="mystudio" elements="image/file"/>
 ```
 
 The first example above defines a 3ds Max-specific name attribute for surface materials, which may be given a value in addition to its MaterialX-compliant name in order to preserve the original package-specific name; it is assumed here that `maxmtlname` is the attribute name used by that particular implementation for this purpose.  The second example defines a "mystudio"-specific boolean attribute "vflip", which could be used in the "file" input of &lt;image> nodes.
@@ -1499,8 +1499,7 @@ Once defined, custom attributes may be used in exactly the same manner as standa
 If an application requires additional custom inputs within a standard MaterialX node, it may define a target application-specific &lt;nodedef> for that node inheriting the base input definitions from the standard node's &lt;nodedef>, then add inputs specific to that target application.  
 
 ```
-  <nodedef name="ND_image_color4_maya" node="image" target="maya"
-      inherit="ND_image_color4">
+  <nodedef name="ND_image_color4_maya" node="image" target="maya" inherit="ND_image_color4">
     <input name="preFilter" type="boolean" value="true"/>
   </nodedef>
 ```
