@@ -5,9 +5,9 @@ MaterialX Specification v1.39
 
 ## MaterialX: An Open Standard for Network-Based CG Object Looks
 
-**Version 1.39**
-Doug Smythe - Industrial Light & Magic
-Jonathan Stone - Lucasfilm Advanced Development Group
+**Version 1.39**  
+Doug Smythe - Industrial Light & Magic  
+Jonathan Stone - Lucasfilm Advanced Development Group  
 March 26, 2023
 
 
