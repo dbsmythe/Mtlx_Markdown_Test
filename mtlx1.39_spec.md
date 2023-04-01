@@ -1157,7 +1157,7 @@ Masking nodes take one 1-4 channel input `in` plus a separate float `mask` input
 
 
 | Masking Operator | Each Channel Output |
-| --- | --- | --- |
+| --- | --- |
 | **`inside`** | Fm |
 | **`outside`** | F(1-m) |
 
@@ -1171,7 +1171,7 @@ The Mix node takes two 1-4 channel inputs `fg` and `bg` plus a separate 1-channe
 
 
 | Mix Operator | Each Channel Output |
-| --- | --- | --- |
+| --- | --- |
 | **`mix`** | Fm+B(1-m) |
 
 
