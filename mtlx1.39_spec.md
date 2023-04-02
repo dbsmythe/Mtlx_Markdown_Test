@@ -375,7 +375,7 @@ MaterialX supports the specification of “namespaces”, which qualify the Mate
 
 References to elements in a different namespace are qualified using the syntax "_namespace_:_elementname_", where _namespace_ is the namespace at the scope of the referenced element and _elementname_ is the name of the referenced element.  References to elements in the same namespace, or to elements in the global namespace, should not be qualified.
 
-Example:
+#### Namespace Examples
 
 Mtllib.mtlx contains the following (assuming that "..." contains any necessary material input connections and other element definitions):
 
@@ -1339,7 +1339,9 @@ Backdrop elements also support the standard `width`, `height`, `xpos`, `ypos` an
 
 ## Node Graph Examples
 
-Example 1: Simple merge of two single-layer images with a separate mask image, followed by a simple color operation.
+#### Nodegraph Example 1
+
+A simple merge of two single-layer images with a separate mask image, followed by a simple color operation.
 
 ![Nodegraph Example 1](media/nodegraph1.png "Nodegraph Example 1")
 
@@ -1369,7 +1371,9 @@ Example 1: Simple merge of two single-layer images with a separate mask image, f
 ```
 
 
-Example 2: A more complex example, using geometry properties to define two diffuse albedo colors and two masks, then color-correcting one albedo less red and more blue and increasing the contrast of the other, blending the two through an area mask, and adding a small amount of scaled 2D Perlin noise within a second mask.  The graph outputs the area mask layer separately from the composited diffuse albedo color.
+#### Nodegraph Example 2
+
+A more complex nodegraph using geometry properties to define two diffuse albedo colors and two masks, then color-correcting one albedo less red and more blue and increasing the contrast of the other, blending the two through an area mask, and adding a small amount of scaled 2D Perlin noise within a second mask.  The graph outputs the area mask layer separately from the composited diffuse albedo color.
 
 ![Nodegraph Example 2](media/nodegraph2.png "Nodegraph Example 2")
 
@@ -1461,6 +1465,8 @@ A targetdef element may also specify additional custom attributes for that targe
 
 ## Custom Attributes and Inputs
 
+#### Custom Attributes
+
 While the MaterialX specification describes the attributes and elements that are meaningful to MaterialX-compliant applications, it is permissible to add custom attributes and inputs to standard MaterialX elements.  These custom attributes and child elements are ignored by applications that do not understand them, although applications should preserve and re-output them with their values and connections even if they do not understand their meaning.
 
 If an application requires additional information related to any MaterialX element, it may define and utilize additional attributes with non-standard names.  Custom attributes are defined using &lt;attributedef> elements:
@@ -1495,6 +1501,9 @@ Once defined, custom attributes may be used in exactly the same manner as standa
     ...
   </image>
 ```
+
+
+#### Custom Inputs
 
 If an application requires additional custom inputs within a standard MaterialX node, it may define a target application-specific &lt;nodedef> for that node inheriting the base input definitions from the standard node's &lt;nodedef>, then add inputs specific to that target application.  
 
