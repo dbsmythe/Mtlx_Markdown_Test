@@ -1279,6 +1279,7 @@ Convolution nodes have one input named "in", and apply a defined convolution fun
 
 ### Shader Nodes
 
+Shader nodes construct a shader (a node with a shader semantic output type) from the specified inputs, which may then be connected to a material.  Standard library shaders do not respond to external illumination; please refer to the [**MaterialX Physically Based Shading Nodes**[(https://github.com/dbsmythe/Mtlx_Markdown_Test/blob/main/mtlx1.39_pbsn.md) document for definitions of additional nodes and shader constructors which do respond to illumination.
 
 
 * **`surface`**: Constructs a surface shader for an unlit surface with a plain unshaded color value. Useful for visualizing texture data or rendering non-PBR materials. Output type "surfaceshader".
