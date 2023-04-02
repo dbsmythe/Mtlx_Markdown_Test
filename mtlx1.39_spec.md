@@ -1752,9 +1752,12 @@ Here is an example of a two-output node definition and external implementation d
 
 Alternatively, a custom node's implementation may be described using a Node Graph.  A &lt;nodegraph> element wraps a graph of standard or custom nodes, taking the inputs and producing the output(s) described in the specified &lt;nodedef>.
 
-A **&lt;nodegraph>** element consists of at least one node element and at least one &lt;output> element contained within a &lt;nodegraph> element.  Nodegraph elements may be one of two types: a **functional nodegraph**, which is the implementation of a node defined by a separate &lt;nodedef>, or a **compound nodegraph**, which is a set of nodes grouped together into a nodegraph container.  A functional nodegraph must either itself specify a `nodedef` attribute or be referenced by an &lt;implementation> element with a "nodegraph" attribute, while a compound nodegraph may do neither but may optionally specify one or more &lt;input> and/or &lt;token> elements:
+A **&lt;nodegraph>** element consists of at least one node element and at least one &lt;output> element contained within a &lt;nodegraph> element.  Nodegraph elements may be one of two types: a **functional nodegraph**, which is the implementation of a node defined by a separate &lt;nodedef>, or a **compound nodegraph**, which is a set of nodes grouped together into a nodegraph container.  A functional nodegraph must either itself specify a `nodedef` attribute or be referenced by an &lt;implementation> element with a "nodegraph" attribute, while a compound nodegraph may do neither but may optionally specify one or more &lt;input> and/or &lt;token> elements.
 
-Functional nodegraph:
+
+#### Functional Nodegraphs
+
+A **functional nodegraph** is a nodegraph-based implementation for a specified &lt;nodedef>, with the &lt;nodedef> declaring the set of inputs that the nodegraph accepts: a functional nodegraph may not itself specify any direct child input elements.
 
 ```
   <nodegraph name="graphname" nodedef="nodedefname" [target="target"]>
@@ -1774,7 +1777,19 @@ or
          nodegraph="graphname" [target="target"]/>
 ```
 
-Compound nodegraph:
+The type(s) of the &lt;output>(s) of the &lt;nodedef> and the type(s) of the nodegraph &lt;output>(s) must agree, and if there are multiple outputs, then the `name`s of the &lt;output>s in the &lt;nodegraph> and &lt;nodedef> must also agree.  The inputs and tokens of the &lt;nodedef> can be referenced within &lt;input> and &lt;token> elements of nodes within the nodegraph implementation using `interfacename` attributes in place of `value` or `nodename` attributes, e.g. a nodedef input "i2" and interface token "diffmap" could be referenced as follows:
+
+```
+    <input name="in2" type="color3" interfacename="i2"/>
+    <token name="map1" type="string" interfacename="diffmap"/>
+```
+
+Note that a uniform &lt;input> of a node within the nodegraph may use `interfacename` to reference a uniform input in the nodedef, but it may not reference a non-uniform nodedef input.
+
+
+#### Compound Nodegraphs
+
+A **compound &lt;nodegraph>** element may specify one or more child &lt;input> and/or &lt;token> elements.  In this case, the &lt;nodegraph> functions as a collapsible "wrapper" for the contained nodes.
 
 ```
   <nodegraph name="graphname">
@@ -1784,20 +1799,12 @@ Compound nodegraph:
   </nodegraph>
 ```
 
-A **functional &lt;nodegraph>** is a nodegraph-based implementation for that &lt;nodedef>, with the &lt;nodedef> declaring the set of inputs that the nodegraph accepts: a functional nodegraph may not itself specify any direct child input elements.  The type(s) of the &lt;output>(s) of the &lt;nodedef> and the type(s) of the nodegraph &lt;output>(s) must agree, and if there are multiple outputs, then the `name`s of the &lt;output>s in the &lt;nodegraph> and &lt;nodedef> must also agree.  The inputs and tokens of the &lt;nodedef> can be referenced within &lt;input> and &lt;token> elements of nodes within the nodegraph implementation using `interfacename` attributes in place of `value` or `nodename` attributes, e.g. a nodedef input "i2" and interface token "diffmap" could be referenced as follows:
-
-```
-    <input name="in2" type="color3" interfacename="i2"/>
-    <token name="map1" type="string" interfacename="diffmap"/>
-```
-
-Note that a uniform &lt;input> of a node within the nodegraph may use `interfacename` to reference a uniform input in the nodedef, but it may not reference a non-uniform nodedef input.
-
-A **compound &lt;nodegraph>** element may specify one or more child &lt;input> and/or &lt;token> elements.  In this case, the &lt;nodegraph> functions as a collapsible "wrapper" for the contained nodes and provides a set of named input and output connection ports which may be referenced by its contained nodes using `interfacename` attributes, and interface token names whose values may be substituted into filenames used within the nodegraph; nodes within this &lt;nodegraph> adopt the context of that nodegraph.  The &lt;input>s and &lt;token>s of a compound nodegraph may also be connected to other nodes outside the &lt;nodegraph> at the same scope as the &lt;nodegraph> itself using `nodename` attributes; inputs of nodes within a compound nodegraph may only be connected to the outputs of other nodes within the same compound nodegraph, or to the input connection ports using interfacename.   This is in contrast to a &lt;backdrop> node whose contained nodes connect directly to nodes outside the backdrop at the same level of context without going through an intermediate named &lt;input>.  A &lt;nodegraph> element of this form may specify the same float `width` and `height` and boolean `minimized` attributes as &lt;backdrop> nodes.  Inputs of other nodes, or the inputs of a compound nodegraph, can connect to an output of a (different) compound nodegraph using a `nodegraph` attribute (and for multiple-output compound nodegraphs, an `output` attribute as well) on a node's &lt;input>.
+A compound nodegraph provides a set of named input and output connection ports which may be referenced by its contained nodes using `interfacename` attributes, and interface token names whose values may be substituted into filenames used within the nodegraph; nodes within this &lt;nodegraph> adopt the context of that nodegraph.  The &lt;input>s and &lt;token>s of a compound nodegraph may also be connected to other nodes outside the &lt;nodegraph> at the same scope as the &lt;nodegraph> itself using `nodename` attributes; inputs of nodes within a compound nodegraph may only be connected to the outputs of other nodes within the same compound nodegraph, or to the input connection ports using interfacename.   This is in contrast to a &lt;backdrop> node whose contained nodes connect directly to nodes outside the backdrop at the same level of context without going through an intermediate named &lt;input>.  A &lt;nodegraph> element of this form may specify the same float `width` and `height` and boolean `minimized` attributes as &lt;backdrop> nodes.  Inputs of other nodes, or the inputs of a compound nodegraph, can connect to an output of a (different) compound nodegraph using a `nodegraph` attribute (and for multiple-output compound nodegraphs, an `output` attribute as well) on a node's &lt;input>.
 
 It is permissible to define multiple nodegraph- and/or file-based implementations for a custom node for the same combination of input and output types, as long as the specified `version`/`target`/`format` combinations are unique, e.g. one implementation for target "oslpattern" and another for "glsl", or one "osl" target with `format="shader"` and another with `format="fragment"`.  It is allowable for there to be both a &lt;nodegraph> and an &lt;implementation> for the same nodedef target/version, with the &lt;implementation> generally prevailing in order to allow for optimized native-code node implementations, although ultimately it would be up to the host application to determine which implementation to actually use.
 
-Example of a custom node defined using a nodegraph:
+
+#### Example Custom Node Defined by a Nodegraph
 
 ```
   <nodedef name="ND_blendadd_color4" node="blend_add">
