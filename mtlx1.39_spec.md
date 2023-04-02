@@ -1620,7 +1620,7 @@ Attributes for NodeDef Token elements:
 * `uiname` (string, optional): an alternative name for this token as it appears in the UI.  If `uiname` is not provided, then `name` is the presumed UI name for the token.
 * `uifolder` (string, optional): the pathed name of the folder in which this token appears in the UI, using a "/" character as a separator for nested UI folders.
 
-Please see Example 3 in the [Material Nodes](#material-nodes) section below for an example of how Tokens are used.
+Please see the [Example Pre-Shader Compositing Material](https://github.com/dbsmythe/Mtlx_Markdown_Test/blob/main/mtlx1.39_spec.md#example-pre-shader-compositing-material) in the [Material Nodes](#material-nodes) section below for an example of how Tokens are used.
 
 
 #### NodeDef Output Elements
@@ -1693,7 +1693,7 @@ An &lt;implementation> element with a file attribute defining an external compil
   </implementation>
 ```
 
-Example of custom nodes defined with external file implementations:
+#### Example Custom Nodes Defined by External File Implementations
 
 ```
   <nodedef name="ND_mariblend_color3" node="mariBlend">
@@ -1966,6 +1966,8 @@ Examples:
              nodename="diffuse_bsdf"/>
 ```
 
+#### AovOutput Example
+
 Example of using &lt;aovoutput> with sourceaov to forward AOVs from within an instantiation of a shader-semantic node; this assumes that &lt;standard_surface> has itself defined &lt;aovoutput>s for "diffuse" and "specular" AOVs:
 
 ```
@@ -2068,6 +2070,9 @@ Creating materials with specific values bound to shader inputs involves instanti
 
 Alternatively, and perhaps more usefully, a complete network of multiple shader nodes of different types or for different targets along with a material node to collect them all can be packaged within a nodegraph, and the various inputs of the shader nodes and any other nodes connected to their inputs can be connected to a single material nodedef interface to provide parameter values for the entire multi-shader network.  Because nodedef inputs can be referenced by more than one node, a single unified interface could be created for several shaders for different targets, and the networks for those targets could contain input value conversion nodes as needed to handle differences in parametrization or shading methodologies.
 
+
+#### Material Inheritance
+
 Materials can inherit from other materials, to add or change shaders connected to different inputs; in this example, a displacement shader is added to the above "Mgold" material to create a new "Mgolddsp" material:
 
 ```
@@ -2086,7 +2091,7 @@ Materials can inherit from other materials, to add or change shaders connected t
 
 Inheritance of material-type custom nodes is also allowed, so that new or changed input values can be applied on top of those specified in the inherited material.
 
-#### Example: Pre-Shader Compositing Material
+#### Example Pre-Shader Compositing Material
 
 A material to blend between three different surface layers using mask textures.  This example also demonstrates the use of the "target" attribute of a shader implementation element to define multiple renderer-specific shaders of the same type referenced within a single material, and the use of interface tokens to define texture filenames.
 
