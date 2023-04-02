@@ -1550,7 +1550,10 @@ Custom nodes are allowed to overload a single `node` name by providing multiple 
 
 The `inherit` attribute may be provided to allow one &lt;nodedef> to inherit from another: this is most useful for defining additional inputs in a target- or version-specific &lt;nodedef>, inheriting from a generic, canonical definition of a node or shader.  NodeDefs which inherit from another nodedef may not re-declare &lt;output>s from the parent nodedef, only add additional new &lt;output>s.
 
-NodeDefs must define one or more child &lt;output> elements within the &lt;nodedef> to state the name and type of each output; for nodes defined using a nodegraph, the names and types of the outputs must agree with the &lt;output> elements in the nodegraph.  The output name for a single-output &lt;nodedef> is less important, as any connection made to the output of a single-output node will succeed regardless of the actual `name` referenced, although by convention, the name "out" is preferred for single-output nodes.
+NodeDefs must define one or more child &lt;output> elements within the &lt;nodedef> to state the name and type of each output; for nodes defined using a nodegraph, the names and types of the outputs must agree with the &lt;output> elements in the nodegraph.  The output name for a single-output &lt;nodedef> is less important, as any connection made to the output of a single-output node will succeed regardless of the actual `name` referenced, although by convention, the name "out" is preferred for single-output nodes.  See the [**NodeDef Output Elements**](#nodedef-output-elements) section below for details.
+
+
+#### NodeDef Parameter Interface
 
 The parameter interface of a custom node is specified via a set of child &lt;input> and &lt;token> elements of the &lt;nodedef>, while documentation of the folder structure of a node may be defined using a number of &lt;uifolder> elements, each of which may provide a doc attribute to provide documentation for that folder layer.  A &lt;uifolder> element may not contain any other elements; in particular, the &lt;input>s and &lt;token>s of the nodedef interface must be direct children of the &lt;nodedef>.  Nested folders may be indicated using a full path for the folder, with a "/" separator between folder levels.
 
@@ -1563,6 +1566,8 @@ The parameter interface of a custom node is specified via a set of child &lt;inp
   </nodedef>
 ```
 
+
+#### NodeDef Input Elements
 
 **Input** elements are used within a &lt;nodedef> to declare the spatially-varying and uniform inputs for a node:
 
@@ -1597,6 +1602,8 @@ Attributes for NodeDef Input elements:
 It is permissible to define a `value` or a `defaultgeomprop` for an input but not both.  If neither `value` or `defaultgeomprop` are defined, then the input becomes required, and any invocation of the custom node without providing a value or connection for this input would be in error.
 
 
+#### NodeDef Token Elements
+
 **Token** elements are used within a &lt;nodedef> to declare uniform "interface token" string-substitution values to be referenced and substituted within filenames used in a node's nodegraph implementation:
 
 ```
@@ -1615,6 +1622,8 @@ Attributes for NodeDef Token elements:
 
 Please see Example 3 in the [Material Nodes](#material-nodes) section below for an example of how Tokens are used.
 
+
+#### NodeDef Output Elements
 
 **Output** elements are used within a &lt;nodedef> to declare an output for node definitions, including the output's name, type, and default value or "defaultinput" connection:
 
