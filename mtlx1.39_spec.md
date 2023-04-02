@@ -41,7 +41,7 @@ This document describes the core MaterialX specification.  Companion documents [
  [Color Spaces and Color Management Systems](#color-spaces-and-color-management-systems)  
  [Units](#units)  
  [MaterialX Namespaces](#materialx-namespaces)  
-  [Geometric Properties](#geometric-properties)  
+ [Geometric Properties](#geometric-properties)  
  [File Prefixes](#file-prefixes)  
  [Filename Substitutions](#filename-substitutions)  
 
@@ -49,12 +49,14 @@ This document describes the core MaterialX specification.  Companion documents [
  [Inputs](#inputs)  
  [Node Graph Elements](#node-graph-elements)  
  [Output Elements](#output-elements)  
+
  [Standard Source Nodes](#standard-source-nodes)  
   [Texture Nodes](#texture-nodes)  
   [Procedural Nodes](#procedural-nodes)  
   [Geometric Nodes](#geometric-nodes)  
   [Global Nodes](#global-nodes)  
   [Application Nodes](#application-nodes)  
+
  [Standard Operator Nodes](#standard-operator-nodes)  
   [Math Nodes](#math-nodes)  
   [Adjustment Nodes](#adjustment-nodes)  
@@ -63,6 +65,7 @@ This document describes the core MaterialX specification.  Companion documents [
   [Channel Nodes](#channel-nodes)  
   [Convolution Nodes](#convolution-nodes)  
   [Shader Nodes](#shader-nodes)  
+
  [Standard Node Inputs](#standard-node-inputs)  
  [Standard UI Attributes](#standard-ui-attributes)  
  [Backdrop Elements](#backdrop-elements)  
@@ -71,14 +74,20 @@ This document describes the core MaterialX specification.  Companion documents [
 **[Customization, Targeting and Shading](#customization-targeting-and-shading)**  
  [Target Definition](#target-definition)  
  [Custom Attributes and Inputs](#custom-attributes-and-inputs)  
+
  [Custom Nodes](#custom-nodes)  
   [Custom Node Declaration: NodeDef Elements](#custom-node-declaration-nodedef-elements)  
   [Custom Node Definition: Implementation Elements](#custom-node-definition-implementation-elements)  
+   [Implementation AOV Elements](#implementation-aov-elements)
   [Custom Node Definition Using Node Graphs](#custom-node-definition-using-node-graphs)  
+   [Functional Nodegraphs](#functional-nodegraphs)
+   [Compound Nodegraphs](#compound-nodegraphs)
   [Custom Node Use](#custom-node-use)  
  [Shader Nodes](#shader-nodes)  
   [Standard Shader-Semantic Operator Nodes](#standard-shader-semantic-operator-nodes)  
+  [AOV Output Elements](#aov-output-elements)
  [Material Nodes](#material-nodes)  
+  [Material Inheritance](#material-inheritance)
  [Material Variants](#material-variants)  
 
 **[References](#references)**
@@ -428,7 +437,8 @@ A `namespace` attribute may also be added to individual &lt;nodedef>s or &lt;nod
 ```
 
 
-### Geometric Properties
+
+## Geometric Properties
 
 Geometric Properties, or "geomprops", are intrinsic or user-defined surface coordinate properties of geometries referenced in a specific space and/or index, and are functionally equivalent to USD's concept of "primvars".  A number of geometric properties are predefined in MaterialX: `position`, `normal`, `tangent`, `bitangent`, `texcoord` and `geomcolor`, the values of which can be accessed in nodegraphs using elements of those same names; see the [Geometric Nodes](#geometric-nodes) section below for details.  The value of a varying geometric property can also be used as the default value for a node input using a `defaultgeomprop` attribute.
 
@@ -1680,6 +1690,9 @@ For uniform inputs and tokens whose nodedef description includes an enum list of
       implname="extrapolate_v" impltype="integer" enumvalues="0, 2, 1, 3"/>
   </implementation>
 ```
+
+
+#### Implementation AOV Elements
 
 An &lt;implementation> element with a file attribute defining an external compiled implementation of a surface shader may contain one or more &lt;aov> elements to declare the names and types of arbitrary output variables ("AOVs") which the shader can output to the renderer.  AOVs must be of type float, color3, vector3, BSDF or EDF.  Note that in MaterialX, AOVs for pre-shading "pattern" colors are normally of type color3, while post-shaded color-like values are normally of type BSDF and emissive color-like values are normally of type EDF.  An &lt;implementation> with a `nodegraph` attribute may not contain &lt;aov> elements; instead, &lt;aovoutput> elements within the nodegraph should be used.
 
