@@ -1279,7 +1279,7 @@ Convolution nodes have one input named "in", and apply a defined convolution fun
 
 ### Shader Nodes
 
-Shader nodes construct a shader (a node with a shader semantic output type) from the specified inputs, which may then be connected to a material.  Standard library shaders do not respond to external illumination; please refer to the [**MaterialX Physically Based Shading Nodes**](https://github.com/dbsmythe/Mtlx_Markdown_Test/blob/main/mtlx1.39_pbsn.md) document for definitions of additional nodes and shader constructors which do respond to illumination.
+Shader nodes construct a shader (a node with a shader semantic output type) from the specified inputs, which may then be connected to a material.  Standard library shaders do not respond to external illumination; please refer to the [**MaterialX Physically Based Shading Nodes**](https://github.com/dbsmythe/Mtlx_Markdown_Test/blob/main/mtlx1.39_pbsn.md#materialx-pbs-library) document for definitions of additional nodes and shader constructors which do respond to illumination.
 
 
 * **`surface`**: Constructs a surface shader for an unlit surface with a plain unshaded color value. Useful for visualizing texture data or rendering non-PBR materials. Output type "surfaceshader".
@@ -2061,7 +2061,7 @@ Materials can inherit from other materials, to add or change shaders connected t
 
 Inheritance of material-type custom nodes is also allowed, so that new or changed input values can be applied on top of those specified in the inherited material.
 
-##### Example: Pre-Shader Compositing Material
+#### Example: Pre-Shader Compositing Material
 
 A material to blend between three different surface layers using mask textures.  This example also demonstrates the use of the "target" attribute of a shader implementation element to define multiple renderer-specific shaders of the same type referenced within a single material, and the use of interface tokens to define texture filenames.
 
