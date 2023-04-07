@@ -8,7 +8,7 @@ MaterialX Specification v1.39
 **Version 1.39**  
 Doug Smythe - Industrial Light & Magic  
 Jonathan Stone - Lucasfilm Advanced Development Group  
-March 26, 2023
+April 7, 2023
 
 
 # Introduction
@@ -870,8 +870,7 @@ Application nodes are used to reference application-defined properties within a 
 Standard Application nodes:
 
 * **`frame`**: the current frame number as defined by the host environment.  This node must be of type float.  Applications may use whatever method is appropriate to communicate the current frame number to the &lt;frame> node's implementation, whether via an internal state variable, a custom input, or other method.
-* **`time`**: the current time in seconds, as defined by the host environment.  This node must be of type float.
-    * `fps` (float): For frame-number-based applications, the number of frames per second for the frame to time conversion.  The default value is 24.0.  Applications may use whatever method is appropriate to communicate the current time to the &lt;time> node's implementation, whether via an internal state variable, a custom input, or other method; real-time applications may return some variation of wall-clock time and ignore the fps value.
+* **`time`**: the current time in seconds, as defined by the host environment.  This node must be of type float.  Applications may use whatever method is appropriate to communicate the current time to the &lt;time> node's implementation, whether via an internal state variable, a custom input, dividing the current frame number by a local "frames per second" value, or other method; real-time applications may return some variation of wall-clock time.
 * **`updirection`**: the current scene "up vector" direction, as defined by the shading environment.  This node must be of type vector3.
     * `space` (uniform string):  the space in which to return the up vector direction, defaults to "world". 
 
