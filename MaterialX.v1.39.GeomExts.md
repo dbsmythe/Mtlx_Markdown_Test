@@ -311,7 +311,7 @@ A MaterialX document can contain multiple property and/or look elements.
 
 ## Property Definition
 
-A **&lt;property> **element defines the name, type and value of a look-specific non-material property of geometry; &lt;**propertyset**> elements are used to group a number of &lt;property>s into a single named object.  The connection between properties or propertysets and specific geometries or collections is done in a &lt;look> element, so that these properties can be reused across different geometries, and enabled in some looks but not others.  &lt;Property> elements may only be used within &lt;propertyset>s; they may not be used independently, although a dedicated &lt;propertyassign> element may be used within a &lt;look> to declare a property name, type, value and assignment all at once.
+A **&lt;property>** element defines the name, type and value of a look-specific non-material property of geometry; &lt;**propertyset**> elements are used to group a number of &lt;property>s into a single named object.  The connection between properties or propertysets and specific geometries or collections is done in a &lt;look> element, so that these properties can be reused across different geometries, and enabled in some looks but not others.  &lt;Property> elements may only be used within &lt;propertyset>s; they may not be used independently, although a dedicated &lt;propertyassign> element may be used within a &lt;look> to declare a property name, type, value and assignment all at once.
 
 ```
   <propertyset name="set1">
