@@ -1223,12 +1223,16 @@ Conditional nodes are used to compare values of two streams, or to select a valu
 
 ### Channel Nodes
 
-Channel nodes are used to perform channel manipulations and data type conversions on float, color<em>N</em>, and vector<em>N</em> streams.
+Channel nodes are used to perform channel manipulations and data type conversions on streams.
 
 
 * **`extract`**: extract the specified channel number from a color<em>N</em> or vector<em>N</em> stream.
     * `in` (color<em>N</em> or vector<em>N</em>): the input value or nodename
     * `which` (integer): the channel number to extract.  For color<em>N</em> streams, use "0" to extract the red channel, "1" for green, "2" for blue and "3" for alpha; for vector<em>N</em> streams, use "0" to extract the x channel, "1" for y, "2" for z and "3" for w.  Default is 0.
+
+* **`extractrowvector`**: extract the specified row vector number from a matrix<em>N</em> stream.
+    * `in` (matrix<em>N</em>): the input value or nodename
+    * `which` (integer): the row number to extract, should be 0-2 for matrix33 streams, or 0-3 for matrix44 streams.
 
 * **`convert`**: convert a stream from one data type to another.  Only certain unambiguous and commonly-needed conversions are supported; see list below.
     * `in` (boolean or integer or float or color<em>N</em> or vector<em>N</em>): the input value or nodename
